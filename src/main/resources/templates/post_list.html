@@ -1,0 +1,12 @@
+<html layout:decorate="~{base}">
+<div layout:fragment="content">
+
+  <a th:href="@{/posts/form}">New Post</a>
+
+  <div th:each="post : ${postList}">
+    <a th:href="@{|/posts/${post.id}|}"><div th:text="${post.id}"></div></a>
+    <div th:text="${post.title}"></div>
+    <div th:text="${post.content}"></div>
+  </div>
+</div>
+</html>

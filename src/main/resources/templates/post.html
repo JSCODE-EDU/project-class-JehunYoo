@@ -1,0 +1,12 @@
+<html layout:decorate="~{base}">
+  <div layout:fragment="content">
+    <div th:text="${post.id}"></div>
+    <div th:text="${post.title}"></div>
+    <div th:text="${post.content}"></div>
+
+    <a th:href="@{|/posts/${post.id}/form|}">update</a>
+    <form th:action="@{|/posts/${post.id}|}" th:method="DELETE">
+      <button type="submit">delete</button>
+    </form>
+  </div>
+</html>

@@ -1,0 +1,23 @@
+<html layout:decorate="~{base}">
+<div layout:fragment="content">
+  <div th:if="${id}" th:text="${id}"></div>
+  <form th:if="${id}" th:action="@{|/posts/${id}|}" th:method="PUT">
+    <label for="title">Title</label>
+    <input type="text" name="title" id="title">
+    <!--    <input type="text" th:field="*{title}">-->
+    <label for="content">Content</label>
+    <textarea name="content" id="content" cols="30" rows="10"></textarea>
+    <!--    <textarea th:field="*{content}" cols="30" rows="10"></textarea>-->
+    <input type="submit" value="update">
+  </form>
+  <form th:unless="${id}" th:action="@{/posts}" th:method="POST">
+    <label for="title">Title</label>
+    <input type="text" name="title" id="title">
+    <!--    <input type="text" th:field="*{title}">-->
+    <label for="content">Content</label>
+    <textarea name="content" id="content" cols="30" rows="10"></textarea>
+    <!--    <textarea th:field="*{content}" cols="30" rows="10"></textarea>-->
+    <input type="submit" value="save">
+  </form>
+</div>
+</html>
