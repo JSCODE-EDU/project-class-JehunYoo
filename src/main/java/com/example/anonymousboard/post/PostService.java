@@ -28,21 +28,23 @@ public class PostService {
         return all;
     }
 
-    public void createPost(String title, String content) {
+    public Post createPost(String title, String content) {
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
         this.postRepository.save(post);
+        return post;
     }
 
     public void deletePost(Integer id) {
         this.postRepository.deleteById(id);
     }
 
-    public void updatePost(Integer id, String title, String content) {
+    public Post updatePost(Integer id, String title, String content) {
         Post post = getPost(id);
         post.setTitle(title);
         post.setContent(content);
         this.postRepository.save(post);
+        return post;
     }
 }
