@@ -5,6 +5,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 
 @RequestMapping("/posts")
@@ -15,32 +17,32 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("")
-    public List<Post> list() {
+    public ResponseEntity<List<Post>> list() {
         List<Post> postList = postService.getAllPostList();
-        return postList;
+        return new ResponseEntity<List<Post>>(postList, HttpStatus.OK);
     }
 
     @PostMapping("")
-    public Post list(@RequestParam String title, @RequestParam String content) {
+    public ResponseEntity<Post> list(@RequestParam String title, @RequestParam String content) {
         Post post = this.postService.createPost(title, content);
-        return post;
+        return new ResponseEntity<Post>(post, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public Post single(@PathVariable("id") Integer id) {
+    public ResponseEntity<Post> single(@PathVariable("id") Integer id) {
         Post post = postService.getPost(id);
-        return post;
+        return new ResponseEntity<Post>(post, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void singleDelete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Void> singleDelete(@PathVariable("id") Integer id) {
         this.postService.deletePost(id);
-        return;
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{id}")
-    public Post singleUpdate(@PathVariable("id") Integer id, @RequestParam String title, @RequestParam String content) {
+    public ResponseEntity<Post> singleUpdate(@PathVariable("id") Integer id, @RequestParam String title, @RequestParam String content) {
         Post post = this.postService.updatePost(id, title, content);
-        return post;
+        return new ResponseEntity<Post>(post, HttpStatus.OK);
     }
 }
