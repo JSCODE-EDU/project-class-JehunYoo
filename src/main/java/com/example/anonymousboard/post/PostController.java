@@ -45,4 +45,10 @@ public class PostController {
         Post post = this.postService.updatePost(id, title, content);
         return new ResponseEntity<Post>(post, HttpStatus.OK);
     }
+
+    @GetMapping("/search") // TODO: /search -> REST API?
+    public ResponseEntity<List<Post>> searchByTitle(@RequestParam("title") String title) {
+        List<Post> posts = this.postService.searchPostByTitle(title);
+        return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
+    }
 }

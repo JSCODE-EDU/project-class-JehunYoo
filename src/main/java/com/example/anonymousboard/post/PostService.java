@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -24,7 +25,7 @@ public class PostService {
     }
 
     public List<Post> getAllPostList() {
-        List<Post> all = this.postRepository.findAll();
+        List<Post> all = this.postRepository.findTop100By(Sort.by("createdAt").descending());
         return all;
     }
 
@@ -46,5 +47,10 @@ public class PostService {
         post.setContent(content);
         this.postRepository.save(post);
         return post;
+    }
+
+    public List<Post> searchPostByTitle(String title) {
+        List<Post> posts = this.postRepository.findTop100ByTitleLike("%" + title + "%", Sort.by("createdAt").descending());
+        return posts;
     }
 }

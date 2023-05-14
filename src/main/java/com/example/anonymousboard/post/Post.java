@@ -1,5 +1,7 @@
 package com.example.anonymousboard.post;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,4 +25,6 @@ public class Post {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    private LocalDateTime createdAt;
 }
