@@ -1,5 +1,3 @@
-local.mv.db
-local.trace.db
 HELP.md
 .gradle
 build/
