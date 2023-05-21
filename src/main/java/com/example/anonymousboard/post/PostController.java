@@ -1,17 +1,23 @@
 package com.example.anonymousboard.post;
 
 import java.util.List;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
 
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 @RestController
+@Validated
 public class PostController {
 
     private final PostService postService;
@@ -23,31 +29,44 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Post> list(@RequestParam String title, @RequestParam String content) {
-        Post post = this.postService.createPost(title, content);
+    public ResponseEntity<Post> list(@Valid @RequestBody Post p) {
+        Post post = this.postService.createPost(p.getTitle(), p.getContent());
         return new ResponseEntity<Post>(post, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> single(@PathVariable("id") Integer id) {
-        Post post = postService.getPost(id);
-        return new ResponseEntity<Post>(post, HttpStatus.OK);
+        Optional<Post> optionalPost = postService.getPost(id);
+        if(optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            return new ResponseEntity<Post>(post, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> singleDelete(@PathVariable("id") Integer id) {
-        this.postService.deletePost(id);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        Optional<Post> optionalPost = this.postService.deletePost(id);
+        if(optionalPost.isPresent()) {
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> singleUpdate(@PathVariable("id") Integer id, @RequestParam String title, @RequestParam String content) {
-        Post post = this.postService.updatePost(id, title, content);
-        return new ResponseEntity<Post>(post, HttpStatus.OK);
+    public ResponseEntity<Post> singleUpdate(@PathVariable("id") Integer id, @Valid @RequestBody Post p) {
+        Optional<Post> optionalPost = this.postService.updatePost(id, p.getTitle(), p.getContent());
+        if(optionalPost.isPresent()) {
+            return new ResponseEntity<Post>(optionalPost.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/search") // TODO: /search -> REST API?
-    public ResponseEntity<List<Post>> searchByTitle(@RequestParam("title") String title) {
+    public ResponseEntity<List<Post>> searchByTitle(@NotBlank(message = "Title must not be blank.") @RequestParam("title") String title) {
         List<Post> posts = this.postService.searchPostByTitle(title);
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }

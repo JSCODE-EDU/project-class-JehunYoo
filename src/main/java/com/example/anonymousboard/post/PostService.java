@@ -1,5 +1,6 @@
 package com.example.anonymousboard.post;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
 
@@ -15,13 +16,9 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public Post getPost(Integer id) {
+    public Optional<Post> getPost(Integer id) {
         Optional<Post> optionalPost = this.postRepository.findById(id);
-        if(optionalPost.isPresent()) {
-            return optionalPost.get();
-        } else {
-            throw new RuntimeException("Post Not Found");
-        }
+        return optionalPost;
     }
 
     public List<Post> getAllPostList() {
@@ -33,20 +30,28 @@ public class PostService {
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
+        post.setCreatedAt(LocalDateTime.now());
         this.postRepository.save(post);
         return post;
     }
 
-    public void deletePost(Integer id) {
-        this.postRepository.deleteById(id);
+    public Optional<Post> deletePost(Integer id) {
+        Optional<Post> optionalPost = this.postRepository.findById(id);
+        if(optionalPost.isPresent()) {
+            this.postRepository.deleteById(id);
+        }
+        return optionalPost;
     }
 
-    public Post updatePost(Integer id, String title, String content) {
-        Post post = getPost(id);
-        post.setTitle(title);
-        post.setContent(content);
-        this.postRepository.save(post);
-        return post;
+    public Optional<Post> updatePost(Integer id, String title, String content) {
+        Optional<Post> optionalPost = this.postRepository.findById(id);
+        if(optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            post.setTitle(title);
+            post.setContent(content);
+            this.postRepository.save(post);
+        }
+        return optionalPost;
     }
 
     public List<Post> searchPostByTitle(String title) {
